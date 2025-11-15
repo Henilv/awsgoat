@@ -1,3 +1,7 @@
+
+AWS Pacu is a modular offensive security framework used to simulate attacker behavior in AWS environments.
+It automates privilege escalation, credential abuse, lateral movement, and exploitation of misconfigured IAM, S3, EC2, Lambda, and network resources.
+Pacu enumerates cloud assets, maps privilege paths, and executes chained attacks to validate real exploitability in cloud infrastructure.
 #---------------------------#
 # IAM Enumeration
 #---------------------------#
