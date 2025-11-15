@@ -1,0 +1,29 @@
+awsgoat_project_summary:
+  overview: >
+    AWSGoat represents a deliberately vulnerable AWS environment mirroring real product,
+    service, and data-hosting architectures. The environment is deployed, enumerated,
+    and stressed to understand how misconfigurations, weak trust boundaries, and flawed
+    IAM policies create exploitable conditions.
+
+  exploitation_workflow: >
+    Pacu, the AWS exploitation framework, is used to simulate adversarial behavior across
+    the cloud stack. Attack flows include credential abuse, privilege escalation,
+    reconnaissance of service permissions, and lateral movement through poorly segmented
+    resources. Each exploit chain is validated and mapped to the AWS components enabling it.
+
+  security_outcomes: >
+    Analysis reveals privilege issues, exposed network paths, open data access, incomplete
+    logging, and insufficient runtime controls. These discovered weaknesses are transformed
+    into layered remediations including hardened IAM baselines, restrictive network
+    boundaries, secure service defaults, automated guardrails, and continuous monitoring.
+
+  framework_alignment: >
+    Findings align with NIST 800-53, CIS AWS Benchmarks, and MITRE ATT&CK for Cloud.
+    Each exploited vector is mapped to its corresponding control requirement, illustrating
+    how governance, detection, and prevention frameworks address the same weaknesses.
+
+  runtime_security_context: >
+    The project correlates exploitation paths with runtime defenses such as IAM session
+    enforcement, CloudTrail anomaly detection, AWS Config drift monitoring, and container-
+    level runtime controls. This frames AWSGoat as a full lifecycle study—connecting
+    misconfiguration discovery, exploit execution, and real-world runtime protection.
